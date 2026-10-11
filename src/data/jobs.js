@@ -1,0 +1,106 @@
+
+export const jobs = [
+    {
+      slug: "frontend-developer",
+      title: "Frontend Developer",
+      department: "Engineering",
+      location: "Dubai, UAE",
+      type: "Full-time",
+      experience: "Fresher / Entry-level",
+      summary:
+        "Build modern, responsive, and accessible user experiences using React and contemporary frontend technologies.",
+      responsibilities: [
+        "Develop responsive web interfaces using React, JavaScript, HTML, and CSS.",
+        "Integrate frontend applications with REST APIs.",
+        "Collaborate with backend developers and designers to deliver quality products.",
+        "Test, debug, and optimize applications for performance.",
+        "Maintain clean, reusable, and well-documented code.",
+      ],
+      qualifications: [
+        "Degree or equivalent practical knowledge in Computer Science or a related field.",
+        "Understanding of JavaScript, HTML, and CSS.",
+        "Basic knowledge of React and component-based development.",
+        "Familiarity with REST APIs and Git.",
+        "Willingness to learn and work collaboratively.",
+      ],
+      skills: ["React", "JavaScript", "HTML/CSS", "REST APIs", "Git"],
+      featured: true,
+    },
+    {
+      slug: "backend-developer",
+      title: "Backend Developer",
+      department: "Engineering",
+      location: "Dubai, UAE",
+      type: "Full-time",
+      experience: "Fresher / Entry-level",
+      summary:
+        "Help develop reliable backend services, APIs, and database integrations for modern software applications.",
+      responsibilities: [
+        "Build and maintain backend services using Node.js and Express.",
+        "Develop and integrate REST API endpoints.",
+        "Work with MongoDB and data models.",
+        "Debug application issues and improve reliability.",
+        "Collaborate with frontend developers on integrations.",
+      ],
+      qualifications: [
+        "Degree or equivalent practical knowledge in Computer Science or a related field.",
+        "Basic understanding of JavaScript and Node.js.",
+        "Familiarity with APIs and databases.",
+        "Knowledge of Git and debugging practices.",
+        "Strong problem-solving and learning skills.",
+      ],
+      skills: ["Node.js", "Express", "MongoDB", "REST APIs", "Git"],
+      featured: true,
+    },
+    {
+      slug: "ui-ux-designer",
+      title: "UI/UX Designer",
+      department: "Design",
+      location: "Dubai, UAE",
+      type: "Full-time",
+      experience: "Junior",
+      summary:
+        "Create intuitive digital experiences by combining user research, interaction design, and polished visual interfaces.",
+      responsibilities: [
+        "Create wireframes, user flows, and interactive prototypes.",
+        "Design clear and consistent user interfaces.",
+        "Collaborate with developers to implement designs.",
+        "Review usability and improve user journeys.",
+        "Maintain consistent design systems and components.",
+      ],
+      qualifications: [
+        "Understanding of user-centered design principles.",
+        "Familiarity with Figma or comparable design tools.",
+        "Ability to communicate design decisions clearly.",
+        "A portfolio demonstrating design thinking and interface work.",
+      ],
+      skills: ["UI Design", "UX Research", "Figma", "Wireframing", "Prototyping"],
+      featured: false,
+    },
+    {
+      slug: "digital-marketing-executive",
+      title: "Digital Marketing Executive",
+      department: "Marketing",
+      location: "Dubai, UAE",
+      type: "Full-time",
+      experience: "Junior",
+      summary:
+        "Support digital campaigns, website content, and performance analysis to strengthen online brand visibility.",
+      responsibilities: [
+        "Assist with digital marketing campaigns.",
+        "Prepare and publish website and social media content.",
+        "Monitor campaign performance and prepare reports.",
+        "Research audiences, keywords, and competitor activity.",
+        "Collaborate with the team on marketing initiatives.",
+      ],
+      qualifications: [
+        "Understanding of digital marketing fundamentals.",
+        "Good written and verbal communication skills.",
+        "Familiarity with social media and content creation.",
+        "Basic knowledge of SEO and analytics is an advantage.",
+      ],
+      skills: ["Digital Marketing", "SEO", "Content", "Analytics", "Social Media"],
+      featured: false,
+    },
+  ];
+  

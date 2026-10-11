@@ -1,0 +1,186 @@
+@import "tailwindcss";
+
+/* ================================
+   GLOBAL RESET
+================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: #000000;
+}
+
+body {
+  margin: 0;
+  background: #000000;
+  color: #ffffff;
+  font-family: "Inter", "Poppins", sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ================================
+   SELECTION
+================================ */
+
+::selection {
+  background: #d4af37;
+  color: #000000;
+}
+
+/* ================================
+   SCROLLBAR
+================================ */
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.45);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+/* ================================
+   PREMIUM BACKGROUND
+================================ */
+
+.premium-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+  background-size: 70px 70px;
+}
+
+/* ================================
+   GOLD GRADIENT TEXT
+================================ */
+
+.gold-text {
+  background: linear-gradient(
+    120deg,
+    #a47c18 0%,
+    #d4af37 35%,
+    #f5df8b 55%,
+    #d4af37 75%,
+    #9f7617 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ================================
+   PREMIUM GLASS
+================================ */
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ================================
+   GOLD GLOW
+================================ */
+
+.gold-glow {
+  box-shadow:
+    0 0 30px rgba(212, 175, 55, 0.08),
+    inset 0 0 30px rgba(212, 175, 55, 0.02);
+}
+
+/* ================================
+   SECTION DIVIDER
+================================ */
+
+.section-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.35),
+    transparent
+  );
+}
+
+/* ================================
+   SMOOTH IMAGE / CANVAS
+================================ */
+
+img,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* ================================
+   REDUCED MOTION
+================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================
+   MOBILE OPTIMIZATION
+================================ */
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .premium-grid {
+    background-size: 45px 45px;
+  }
+}
