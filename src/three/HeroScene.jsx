@@ -1,134 +1,307 @@
+
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Float, Sparkles } from "@react-three/drei";
+import {
+  Float,
+  Sparkles,
+  OrbitControls,
+  MeshDistortMaterial,
+} from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 
+const GOLD = "#D4AF37";
+const LIGHT_GOLD = "#F8E6A0";
+
 function Core() {
-  const meshRef = useRef();
+  const groupRef = useRef(null);
+  const outerRef = useRef(null);
+  const innerRef = useRef(null);
+  const shellRef = useRef(null);
 
-  useFrame((state) => {
-    if (!meshRef.current) return;
+  useFrame((state, delta) => {
+    const t = state.clock.elapsedTime;
+    const pointer = state.pointer;
 
-    meshRef.current.rotation.x = state.clock.elapsedTime * 0.15;
-    meshRef.current.rotation.y = state.clock.elapsedTime * 0.25;
-  });
+    if (groupRef.current) {
+      groupRef.current.rotation.y = THREE.MathUtils.damp(
+        groupRef.current.rotation.y,
+        pointer.x * 0.3,
+        2,
+        delta
+      );
 
-  return (
-    <mesh ref={meshRef}>
-      <icosahedronGeometry args={[1.25, 2]} />
+      groupRef.current.rotation.x = THREE.MathUtils.damp(
+        groupRef.current.rotation.x,
+        -pointer.y * 0.25,
+        2,
+        delta
+      );
+    }
 
-      <meshStandardMaterial
-        color="#D4AF37"
-        metalness={0.8}
-        roughness={0.25}
-        wireframe
-      />
-    </mesh>
-  );
-}
+    if (outerRef.current) {
+      outerRef.current.rotation.x += delta * 0.12;
+      outerRef.current.rotation.y += delta * 0.2;
+    }
 
-function InnerCore() {
-  const meshRef = useRef();
+    if (innerRef.current) {
+      innerRef.current.rotation.y -= delta * 0.3;
+      innerRef.current.rotation.z += delta * 0.12;
+    }
 
-  useFrame((state) => {
-    if (!meshRef.current) return;
-
-    meshRef.current.rotation.y = -state.clock.elapsedTime * 0.35;
-    meshRef.current.rotation.z = state.clock.elapsedTime * 0.15;
-  });
-
-  return (
-    <mesh ref={meshRef}>
-      <icosahedronGeometry args={[0.75, 1]} />
-
-      <meshStandardMaterial
-        color="#ffffff"
-        metalness={0.7}
-        roughness={0.2}
-        wireframe
-      />
-    </mesh>
-  );
-}
-
-function Rings() {
-  const groupRef = useRef();
-
-  useFrame((state) => {
-    if (!groupRef.current) return;
-
-    groupRef.current.rotation.x =
-      Math.sin(state.clock.elapsedTime * 0.4) * 0.3;
-
-    groupRef.current.rotation.y =
-      state.clock.elapsedTime * 0.2;
+    if (shellRef.current) {
+      const pulse = 1 + Math.sin(t * 1.5) * 0.025;
+      shellRef.current.scale.setScalar(pulse);
+    }
   });
 
   return (
     <group ref={groupRef}>
-
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.7, 0.015, 16, 100]} />
-
-        <meshBasicMaterial color="#D4AF37" />
+      {/* Outer metallic wireframe */}
+      <mesh ref={outerRef}>
+        <icosahedronGeometry args={[1.25, 2]} />
+        <meshStandardMaterial
+          color={GOLD}
+          emissive={GOLD}
+          emissiveIntensity={0.45}
+          metalness={0.9}
+          roughness={0.22}
+          wireframe
+        />
       </mesh>
 
-      <mesh rotation={[0, Math.PI / 3, 0]}>
-        <torusGeometry args={[2, 0.01, 16, 100]} />
-
-        <meshBasicMaterial color="#ffffff" />
+      {/* Inner luminous shell */}
+      <mesh ref={shellRef}>
+        <icosahedronGeometry args={[0.86, 2]} />
+        <meshPhysicalMaterial
+          color="#17130A"
+          metalness={0.8}
+          roughness={0.2}
+          transparent
+          opacity={0.8}
+          clearcoat={1}
+          clearcoatRoughness={0.15}
+        />
       </mesh>
 
-      <mesh rotation={[Math.PI / 3, 0, Math.PI / 4]}>
-        <torusGeometry args={[2.25, 0.008, 16, 100]} />
-
-        <meshBasicMaterial color="#D4AF37" />
+      {/* Inner geometric structure */}
+      <mesh ref={innerRef}>
+        <octahedronGeometry args={[0.62, 2]} />
+        <meshStandardMaterial
+          color={LIGHT_GOLD}
+          emissive={GOLD}
+          emissiveIntensity={0.8}
+          metalness={0.75}
+          roughness={0.2}
+          wireframe
+        />
       </mesh>
 
+      {/* Central energy point */}
+      <mesh>
+        <sphereGeometry args={[0.19, 32, 32]} />
+        <MeshDistortMaterial
+          color={LIGHT_GOLD}
+          emissive={GOLD}
+          emissiveIntensity={1.4}
+          metalness={0.5}
+          roughness={0.15}
+          distort={0.25}
+          speed={2}
+        />
+      </mesh>
+
+      {/* Small geometric details */}
+      {Array.from({ length: 8 }, (_, index) => {
+        const angle = (index / 8) * Math.PI * 2;
+        const radius = 1.48;
+
+        return (
+          <mesh
+            key={index}
+            position={[
+              Math.cos(angle) * radius,
+              Math.sin(angle) * radius,
+              Math.sin(angle * 2) * 0.15,
+            ]}
+          >
+            <sphereGeometry args={[0.035, 12, 12]} />
+            <meshBasicMaterial color={LIGHT_GOLD} />
+          </mesh>
+        );
+      })}
     </group>
   );
 }
 
+function OrbitalRings() {
+  const groupRef = useRef(null);
+  const ringOneRef = useRef(null);
+  const ringTwoRef = useRef(null);
+  const ringThreeRef = useRef(null);
+
+  useFrame((state, delta) => {
+    const t = state.clock.elapsedTime;
+
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.08;
+    }
+
+    if (ringOneRef.current) {
+      ringOneRef.current.rotation.z = Math.sin(t * 0.35) * 0.12;
+    }
+
+    if (ringTwoRef.current) {
+      ringTwoRef.current.rotation.x = Math.cos(t * 0.3) * 0.12;
+    }
+
+    if (ringThreeRef.current) {
+      ringThreeRef.current.rotation.y += delta * 0.12;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <mesh ref={ringOneRef} rotation={[Math.PI / 2.2, 0.15, 0]}>
+        <torusGeometry args={[1.7, 0.012, 12, 160]} />
+        <meshBasicMaterial
+          color={GOLD}
+          transparent
+          opacity={0.85}
+        />
+      </mesh>
+
+      <mesh ref={ringTwoRef} rotation={[0.5, Math.PI / 3, 0.3]}>
+        <torusGeometry args={[1.95, 0.009, 10, 160]} />
+        <meshBasicMaterial
+          color="#FFFFFF"
+          transparent
+          opacity={0.45}
+        />
+      </mesh>
+
+      <mesh ref={ringThreeRef} rotation={[1.1, 0.2, Math.PI / 4]}>
+        <torusGeometry args={[2.2, 0.008, 10, 160]} />
+        <meshBasicMaterial
+          color={LIGHT_GOLD}
+          transparent
+          opacity={0.65}
+        />
+      </mesh>
+
+      {/* Orbiting metallic nodes */}
+      <OrbitingNode radius={1.7} speed={0.7} phase={0} />
+      <OrbitingNode radius={1.95} speed={-0.48} phase={1.7} />
+      <OrbitingNode radius={2.2} speed={0.35} phase={3.2} />
+    </group>
+  );
+}
+
+function OrbitingNode({ radius, speed, phase }) {
+  const nodeRef = useRef(null);
+
+  useFrame((state) => {
+    if (!nodeRef.current) return;
+
+    const t = state.clock.elapsedTime * speed + phase;
+
+    nodeRef.current.position.set(
+      Math.cos(t) * radius,
+      Math.sin(t) * radius * 0.48,
+      Math.sin(t) * radius * 0.72
+    );
+  });
+
+  return (
+    <mesh ref={nodeRef}>
+      <sphereGeometry args={[0.055, 16, 16]} />
+      <meshStandardMaterial
+        color={LIGHT_GOLD}
+        emissive={GOLD}
+        emissiveIntensity={1.6}
+        metalness={0.6}
+        roughness={0.2}
+      />
+    </mesh>
+  );
+}
+
 function Scene() {
+  const sceneRef = useRef(null);
+
+  useFrame((state, delta) => {
+    if (!sceneRef.current) return;
+
+    const pointer = state.pointer;
+
+    sceneRef.current.rotation.y = THREE.MathUtils.damp(
+      sceneRef.current.rotation.y,
+      pointer.x * 0.08,
+      2,
+      delta
+    );
+
+    sceneRef.current.position.y = Math.sin(
+      state.clock.elapsedTime * 0.55
+    ) * 0.04;
+  });
+
   return (
     <>
-      <ambientLight intensity={1.2} />
+      <ambientLight intensity={0.65} />
 
       <pointLight
-        position={[3, 3, 3]}
-        intensity={25}
-        color="#D4AF37"
+        position={[3, 3, 4]}
+        intensity={30}
+        color={GOLD}
       />
 
       <pointLight
         position={[-3, -2, 2]}
-        intensity={15}
-        color="#ffffff"
+        intensity={18}
+        color="#FFFFFF"
       />
 
-      <Float
-        speed={2}
-        rotationIntensity={0.4}
-        floatIntensity={0.5}
-      >
-        <Core />
-        <InnerCore />
-        <Rings />
-      </Float>
+      <pointLight
+        position={[0, 0, -3]}
+        intensity={12}
+        color={LIGHT_GOLD}
+      />
+
+      <group ref={sceneRef}>
+        <Float
+          speed={1.25}
+          rotationIntensity={0.12}
+          floatIntensity={0.22}
+        >
+          <OrbitalRings />
+          <Core />
+        </Float>
+      </group>
 
       <Sparkles
-        count={80}
+        count={100}
         scale={[6, 6, 6]}
         size={1.5}
-        speed={0.4}
-        color="#D4AF37"
+        speed={0.3}
+        color={GOLD}
+        opacity={0.75}
+      />
+
+      <Sparkles
+        count={35}
+        scale={[4.5, 4.5, 4.5]}
+        size={2.5}
+        speed={0.18}
+        color="#FFFFFF"
+        opacity={0.4}
       />
 
       <OrbitControls
         enableZoom={false}
         enablePan={false}
+        enableRotate={false}
         autoRotate
-        autoRotateSpeed={0.5}
+        autoRotateSpeed={0.25}
       />
     </>
   );
@@ -136,17 +309,25 @@ function Scene() {
 
 function HeroScene() {
   return (
-    <Canvas
-      camera={{
-        position: [0, 0, 6],
-        fov: 45,
-      }}
-      dpr={[1, 1.5]}
-    >
-      <color attach="background" args={["transparent"]} />
-
-      <Scene />
-    </Canvas>
+    <div className="h-full w-full">
+      <Canvas
+        camera={{
+          position: [0, 0, 6.4],
+          fov: 42,
+        }}
+        dpr={[1, 1.5]}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
+      >
+        <Scene />
+      </Canvas>
+    </div>
   );
 }
 
